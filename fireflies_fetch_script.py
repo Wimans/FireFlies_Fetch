@@ -14,6 +14,7 @@ import os, pathlib, time, requests, re, sys
 API_URL   = "https://api.fireflies.ai/graphql"
 TOKEN     = os.getenv("FIREFLIES_TOKEN")
 OUT_DIR   = pathlib.Path("output")
+NIET_KLANT_DIR = OUT_DIR / "niet_klant"
 PAGE_SIZE = 50
 
 if not TOKEN:
@@ -61,7 +62,8 @@ def main():
         for t in batch:
             tid, title = t["id"], clean(t.get("title") or tid)
             fn = OUT_DIR / f"{title}_{tid}.txt"
-            if fn.exists():
+            niet_klant_fn = NIET_KLANT_DIR / fn.name
+            if fn.exists() or niet_klant_fn.exists():
                 print(f"✔︎  {fn.name} exists; skipping")
                 continue
 
